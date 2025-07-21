@@ -1,0 +1,148 @@
+{
+  "streams": [
+    {
+      "name": "Yammat FM",
+      "stream_url": "https://stream.yammat.fm/radio/8000/yammat.mp3",
+      "stream_song_url": "https://stream.yammat.fm/radio/8000/yammat.mp3",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    },
+    {
+      "name": "Radio Crash",
+      "stream_url": "https://live.radiocrash.net/;",
+      "stream_song_url": "https://live.radiocrash.net/;",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    },
+    {
+      "name": "Italo Disco Net",
+      "stream_url": "https://cast2.asurahosting.com/proxy/alen/stream.mp3",
+      "stream_song_url": "https://cast2.asurahosting.com/proxy/alen/stream.mp3",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    },
+    {
+      "name": "HR 1 program",
+      "stream_url": "https://25693.live.streamtheworld.com/PROGRAM1AAC.aac",
+      "stream_song_url": "https://25693.live.streamtheworld.com/PROGRAM1AAC.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    },
+    {
+      "name": "Radio Sljeme",
+      "stream_url": "https://27753.live.streamtheworld.com/SLJEMEAAC.aac",
+      "stream_song_url": "https://27753.live.streamtheworld.com/SLJEMEAAC.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    },
+    {
+      "name": "HR 2 program",
+      "stream_url": "https://28573.live.streamtheworld.com/PROGRAM2AAC.aac",
+      "stream_song_url": "https://28573.live.streamtheworld.com/PROGRAM2AAC.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    },
+    {
+      "name": "HR Pop",
+      "stream_url": "https://27863.live.streamtheworld.com/HR_POPAAC.aac",
+      "stream_song_url": "https://27863.live.streamtheworld.com/HR_POPAAC.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "2"
+    },
+    {
+      "name": "HR Klasika",
+      "stream_url": "https://22653.live.streamtheworld.com/HR_CLASSICSAAC.aac",
+      "stream_song_url": "https://22653.live.streamtheworld.com/HR_CLASSICSAAC.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    },
+    {
+      "name": "HR 3 program",
+      "stream_url": "https://25503.live.streamtheworld.com/PROGRAM3AAC.aac",
+      "stream_song_url": "https://25503.live.streamtheworld.com/PROGRAM3AAC.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    },
+    {
+      "name": "Radio 101 Live",
+      "stream_url": "https://live.radio101.hr:9531/;",
+      "stream_song_url": "https://live.radio101.hr:9531/;",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "N",
+      "fav": "1"
+    },
+    {
+      "name": "Radio 101 Rock",
+      "stream_url": "https://live.radio101.hr:8020/;",
+      "stream_song_url": "https://live.radio101.hr:8020/;",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "N",
+      "fav": "1"
+    },
+    {
+      "name": "Radio 101 Soft Sound",
+      "stream_url": "https://live.radio101.hr:8010/;",
+      "stream_song_url": "https://live.radio101.hr:8010/;",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "2"
+    },
+    {
+      "name": "Radio Osijek",
+      "stream_url": "https://21633.live.streamtheworld.com/OSIJEKAAC.aac",
+      "stream_song_url": "https://21633.live.streamtheworld.com/OSIJEKAAC.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "N",
+      "fav": "1"
+    },
+    {
+      "name": "Radio Pula",
+      "stream_url": "https://25643.live.streamtheworld.com/PULAAAC.aac",
+      "stream_song_url": "https://25643.live.streamtheworld.com/PULAAAC.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "N",
+      "fav": "1"
+    },
+    {
+      "name": "Radio Student",
+      "stream_url": "http://161.53.122.184:8000/AAC128.aac",
+      "stream_song_url": "http://161.53.122.184:8000/AAC128.aac",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "N",
+      "fav": "1"
+    },
+    {
+      "name": "Radio Tvornica",
+      "stream_url": "https://c8.hostingcentar.com/streams/radiotvornica/",
+      "stream_song_url": "https://c8.hostingcentar.com/streams/radiotvornica/",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "N",
+      "fav": "1"
+    },
+    {
+      "name": "Radio 808",
+      "stream_url": "https://tls-sc2.multimedijalist.hr/;",
+      "stream_song_url": "https://tls-sc2.multimedijalist.hr/;",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "N",
+      "fav": "1"
+    },
+    {
+      "name": "Radio deejay hr",
+      "stream_url": "https://c2.hostingcentar.com/streams/radiodj/",
+      "stream_song_url": "https://c2.hostingcentar.com/streams/radiodj/;",
+      "php_script": "php/getSongInfo.php",
+      "prikazi": "D",
+      "fav": "1"
+    }
+  ]
+}
