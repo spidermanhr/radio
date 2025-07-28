@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Stanice - Pregled i Slušanje</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-container input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .station-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .station-info {
+            flex-grow: 1;
+            margin-right: 15px;
+        }
+        .station-name {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .station-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .station-details span {
+            display: block;
+        }
+        .station-link {
+            font-size: 0.8em;
+            color: #007bff;
+            word-break: break-all;
+            margin-top: 5px;
+        }
+        .station-link:hover {
+            text-decoration: underline;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+        .play-button, .stop-button {
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .play-button {
+            background-color: #28a745; /* Default zelena */
+        }
+        .play-button:hover {
+            background-color: #218838;
+        }
+        .play-button.active { /* Nova klasa za aktivni gumb */
+            background-color: #007bff; /* Plava boja */
+        }
+        .play-button.active:hover {
+            background-color: #0056b3; /* Tamnija plava za hover */
+        }
+        .stop-button {
+            background-color: #dc3545;
+        }
+        .stop-button:hover {
+            background-color: #c82333;
+        }
+        .current-playing {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .current-playing p {
+            margin: 0;
+            font-style: italic;
+        }
+        audio {
+            width: 100%;
+            margin-top: 15px;
+        }
+        #loading-message, #no-results-message {
+            text-align: center;
+            font-size: 1.1em;
+            color: #555;
+            margin-top: 50px;
+        }
+        #no-results-message {
+            display: none;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Popis Radio Stanica</h1>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Pretraži radio stanice (naziv, država, tagovi)...">
+        </div>
+
+        <div id="loading-message">Učitavam radio stanice...</div>
+        <div id="no-results-message">Nema pronađenih rezultata.</div>
+        <div id="station-list">
+            </div>
+
+        <div class="current-playing" id="current-playing-info" style="display: none;">
+            <p>Sviram: <span id="current-station-name"></span></p>
+            <audio id="audio-player" controls autoplay></audio>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stationListDiv = document.getElementById("station-list");
+            const audioPlayer = document.getElementById("audio-player");
+            const currentPlayingInfo = document.getElementById("current-playing-info");
+            const currentStationName = document.getElementById("current-station-name");
+            const loadingMessage = document.getElementById("loading-message");
+            const searchInput = document.getElementById("searchInput");
+            const noResultsMessage = document.getElementById("no-results-message");
+
+            let allStations = [];
+            let uniqueStations = [];
+            let activePlayButton = null; // Prati trenutno aktivni gumb
+
+            // Funkcija za renderiranje stanica
+            function renderStations(stationsToRender) {
+                stationListDiv.innerHTML = '';
+                if (stationsToRender.length === 0) {
+                    noResultsMessage.style.display = 'block';
+                } else {
+                    noResultsMessage.style.display = 'none';
+                }
+
+                stationsToRender.forEach(station => {
+                    const name = station.getAttribute("name");
+                    const url = station.getAttribute("url_resolved");
+                    const country = station.getAttribute("country");
+                    const bitrate = station.getAttribute("bitrate");
+                    const tags = station.getAttribute("tags");
+                    const uuid = station.getAttribute("stationuuid"); // Potrebno za aktivni status
+
+                    const stationCard = document.createElement("div");
+                    stationCard.classList.add("station-card");
+                    stationCard.dataset.uuid = uuid; // Dodaj uuid kao data atribut
+
+                    const stationInfo = document.createElement("div");
+                    stationInfo.classList.add("station-info");
+
+                    const stationName = document.createElement("div");
+                    stationName.classList.add("station-name");
+                    stationName.textContent = name;
+                    stationInfo.appendChild(stationName);
+
+                    const stationDetails = document.createElement("div");
+                    stationDetails.classList.add("station-details");
+                    stationDetails.innerHTML = `
+                        <span>Država: ${country}</span>
+                        <span>Bitrate: ${bitrate} kbps</span>
+                        <span>Tagovi: ${tags || 'Nema tagova'}</span>
+                    `;
+                    stationInfo.appendChild(stationDetails);
+
+                    const stationLink = document.createElement("a");
+                    stationLink.classList.add("station-link");
+                    stationLink.href = url;
+                    stationLink.textContent = url;
+                    stationLink.target = "_blank";
+                    stationLink.title = "Klikni za otvaranje ili kopiraj link";
+                    stationInfo.appendChild(stationLink);
+
+                    stationCard.appendChild(stationInfo);
+
+                    const buttonGroup = document.createElement("div");
+                    buttonGroup.classList.add("button-group");
+
+                    const playButton = document.createElement("button");
+                    playButton.classList.add("play-button");
+                    playButton.textContent = "Sviraj";
+                    // Provjeri je li ovo trenutno aktivna stanica i postavi klasu
+                    if (audioPlayer.src === url && !audioPlayer.paused) {
+                        playButton.classList.add('active');
+                        activePlayButton = playButton; // Ažuriraj aktivni gumb
+                    }
+                    
+                    playButton.onclick = () => {
+                        // Ukloni 'active' klasu s prethodno aktivnog gumba
+                        if (activePlayButton) {
+                            activePlayButton.classList.remove('active');
+                        }
+                        
+                        // Postavi 'active' klasu na trenutno kliknuti gumb
+                        playButton.classList.add('active');
+                        activePlayButton = playButton;
+
+                        audioPlayer.src = url;
+                        currentStationName.textContent = name;
+                        currentPlayingInfo.style.display = 'block';
+                        audioPlayer.play().catch(e => console.error("Greška pri reprodukciji:", e));
+                    };
+                    buttonGroup.appendChild(playButton);
+
+                    const stopButton = document.createElement("button");
+                    stopButton.classList.add("stop-button");
+                    stopButton.textContent = "Stop";
+                    stopButton.onclick = () => {
+                        audioPlayer.pause();
+                        audioPlayer.currentTime = 0;
+                        currentPlayingInfo.style.display = 'none';
+                        currentStationName.textContent = '';
+                        // Ukloni 'active' klasu kada se reprodukcija zaustavi
+                        if (activePlayButton) {
+                            activePlayButton.classList.remove('active');
+                            activePlayButton = null;
+                        }
+                    };
+                    buttonGroup.appendChild(stopButton);
+
+                    stationCard.appendChild(buttonGroup);
+
+                    stationListDiv.appendChild(stationCard);
+                });
+            }
+
+            // Funkcija za filtriranje stanica
+            function filterStations() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filtered = uniqueStations.filter(station => {
+                    const name = station.getAttribute("name").toLowerCase();
+                    const country = station.getAttribute("country").toLowerCase();
+                    const tags = (station.getAttribute("tags") || '').toLowerCase();
+                    
+                    return name.includes(searchTerm) ||
+                           country.includes(searchTerm) ||
+                           tags.includes(searchTerm);
+                });
+                renderStations(filtered);
+            }
+
+            // Dohvati XML datoteku
+            fetch('http://fi1.api.radio-browser.info/xml/stations/bycountry/croatia')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.text();
+                })
+                .then(xmlString => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+                    allStations = Array.from(xmlDoc.querySelectorAll("station"));
+
+                    const seenUuids = new Set();
+                    uniqueStations = allStations.filter(station => {
+                        const uuid = station.getAttribute("stationuuid");
+                        if (seenUuids.has(uuid)) {
+                            return false;
+                        }
+                        seenUuids.add(uuid);
+                        return true;
+                    });
+
+                    loadingMessage.style.display = 'none';
+                    renderStations(uniqueStations);
+                })
+                .catch(error => {
+                    console.error('Došlo je do greške prilikom dohvaćanja XML datoteke:', error);
+                    loadingMessage.textContent = 'Greška pri učitavanju radio stanica. Provjerite konzolu za detalje.';
+                    loadingMessage.style.color = 'red';
+                });
+
+            searchInput.addEventListener('input', filterStations);
+
+            // Dodatni event listeneri za audio player
+            // Kad se reprodukcija zaustavi (ne klikom na stop, npr. stream završi)
+            audioPlayer.addEventListener('pause', () => {
+                if (audioPlayer.currentTime === 0 && !audioPlayer.src) { // Ako je player zaustavljen i nema izvora
+                   currentPlayingInfo.style.display = 'none';
+                   currentStationName.textContent = '';
+                   if (activePlayButton) {
+                       activePlayButton.classList.remove('active');
+                       activePlayButton = null;
+                   }
+                }
+            });
+
+            // Kad krene svirati
+            audioPlayer.addEventListener('play', () => {
+                // Osiguraj da je player vidljiv ako je pokrenut izvana (npr. controls)
+                currentPlayingInfo.style.display = 'block'; 
+            });
+
+        });
+    </script>
+
+</body>
+</html>
